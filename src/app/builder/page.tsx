@@ -47,12 +47,22 @@ const BuilderPage = () => {
         blocks: [
           {
             id: "section",
-            label: "<b>Section</b>",
-            attributes: { class: "gjs-block-section" },
-            content: `<section>
-                        <h1>This is a simple title</h1>
-                        <div>This is just a Lorem text...</div>
-                      </section>`,
+            label: "Section",
+            // The content can be a component definition
+            content: {
+              // We use the `wrapper` component as it's the default container
+              type: 'wrapper',
+              // Make it droppable
+              droppable: true,
+              // Default styles for the section
+              style: {
+                padding: '2rem',
+                'min-height': '100px',
+                'border': '2px dashed #ccc',
+              },
+              // Add some default inner components
+              components: '<h1>This is a simple title</h1><div>This is just a Lorem text...</div>'
+            },
           },
           {
             id: "text",
@@ -66,6 +76,15 @@ const BuilderPage = () => {
             content: { type: "image" },
             activate: true,
           },
+          // A new block for a droppable container
+          {
+            id: 'container',
+            label: 'Container',
+            content: {
+              type: 'container', // This will correspond to a new component type
+            },
+            category: 'Layout',
+          },
         ],
       },
       layerManager: {
@@ -77,27 +96,253 @@ const BuilderPage = () => {
           {
             name: 'General',
             open: false,
-            buildProps: ['float', 'display', 'position', 'top', 'right', 'left', 'bottom'],
+            buildProps: [
+              'float',
+              'display',
+              'position',
+              'top',
+              'right',
+              'left',
+              'bottom',
+            ],
+            properties: [
+              {
+                id: 'float',
+                type: 'radio',
+                defaults: 'none',
+                list: [
+                  { value: 'none', className: 'fa fa-times' },
+                  { value: 'left', className: 'fa fa-align-left' },
+                  { value: 'right', className: 'fa fa-align-right' },
+                ],
+              },
+              {
+                property: 'position',
+                type: 'select',
+                defaults: 'static',
+                list: [
+                  { value: 'static', name: 'Static' },
+                  { value: 'relative', name: 'Relative' },
+                  { value: 'absolute', name: 'Absolute' },
+                  { value: 'fixed', name: 'Fixed' },
+                ],
+              },
+            ],
           },
           {
             name: 'Dimension',
             open: false,
-            buildProps: ['width', 'height', 'max-width', 'min-height', 'margin', 'padding'],
+            buildProps: [
+              'width',
+              'height',
+              'max-width',
+              'min-height',
+              'margin',
+              'padding',
+            ],
+            properties: [
+              {
+                id: 'width',
+                type: 'integer',
+                units: ['px', '%', 'em', 'rem', 'vw'],
+                defaults: 'auto',
+              },
+              {
+                id: 'height',
+                type: 'integer',
+                units: ['px', '%', 'em', 'rem', 'vh'],
+                defaults: 'auto',
+              },
+              {
+                id: 'max-width',
+                type: 'integer',
+                units: ['px', '%', 'em', 'rem', 'vw'],
+                defaults: 'none',
+              },
+              {
+                id: 'min-height',
+                type: 'integer',
+                units: ['px', '%', 'em', 'rem', 'vh'],
+                defaults: '0',
+              },
+              {
+                id: 'margin',
+                property: 'margin',
+                type: 'composite',
+                properties: [
+                  { id: 'margin-top', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'margin-right', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'margin-bottom', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'margin-left', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                ],
+              },
+              {
+                id: 'padding',
+                property: 'padding',
+                type: 'composite',
+                properties: [
+                  { id: 'padding-top', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'padding-right', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'padding-bottom', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'padding-left', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                ],
+              },
+            ],
           },
           {
             name: 'Typography',
             open: false,
-            buildProps: ['font-family', 'font-size', 'font-weight', 'letter-spacing', 'color', 'line-height', 'text-align', 'text-decoration', 'text-shadow'],
+            buildProps: [
+              'font-family',
+              'font-size',
+              'font-weight',
+              'letter-spacing',
+              'color',
+              'line-height',
+              'text-align',
+              'text-decoration',
+              'text-shadow',
+            ],
+            properties: [
+              {
+                id: 'font-family',
+                type: 'select',
+                defaults: 'Arial, sans-serif',
+                list: [
+                  { value: 'Arial, sans-serif', name: 'Arial' },
+                  { value: 'Helvetica, sans-serif', name: 'Helvetica' },
+                  { value: 'Georgia, serif', name: 'Georgia' },
+                  { value: 'Times New Roman, serif', name: 'Times New Roman' },
+                  { value: 'Courier New, monospace', name: 'Courier New' },
+                ],
+              },
+              {
+                id: 'font-size',
+                type: 'integer',
+                units: ['px', 'em', 'rem', '%'],
+                defaults: '16px',
+              },
+              {
+                id: 'font-weight',
+                type: 'select',
+                defaults: 'normal',
+                list: [
+                  { value: 'normal', name: 'Normal' },
+                  { value: 'bold', name: 'Bold' },
+                  { value: 'bolder', name: 'Bolder' },
+                  { value: 'lighter', name: 'Lighter' },
+                  { value: '100', name: '100' },
+                  { value: '200', name: '200' },
+                  { value: '300', name: '300' },
+                  { value: '400', name: '400' },
+                  { value: '500', name: '500' },
+                  { value: '600', name: '600' },
+                  { value: '700', name: '700' },
+                  { value: '800', name: '800' },
+                  { value: '900', name: '900' },
+                ],
+              },
+              {
+                id: 'line-height',
+                type: 'integer',
+                units: ['px', 'em', 'rem', '%'],
+                defaults: 'normal',
+              },
+              {
+                id: 'text-align',
+                type: 'radio',
+                defaults: 'left',
+                list: [
+                  { value: 'left', name: 'Left', className: 'fa fa-align-left' },
+                  { value: 'center', name: 'Center', className: 'fa fa-align-center' },
+                  { value: 'right', name: 'Right', className: 'fa fa-align-right' },
+                  { value: 'justify', name: 'Justify', className: 'fa fa-align-justify' },
+                ],
+              },
+              {
+                id: 'text-decoration',
+                type: 'radio',
+                defaults: 'none',
+                list: [
+                  { value: 'none', name: 'None', className: 'fa fa-times' },
+                  { value: 'underline', name: 'Underline', className: 'fa fa-underline' },
+                  { value: 'line-through', name: 'Line-through', className: 'fa fa-strikethrough' },
+                ],
+              },
+            ],
           },
           {
             name: 'Decorations',
             open: false,
-            buildProps: ['opacity', 'background-color', 'border-radius', 'border', 'box-shadow', 'background'],
+            buildProps: [
+              'opacity',
+              'background-color',
+              'border-radius',
+              'border',
+              'box-shadow',
+              'background',
+            ],
+            properties: [
+              {
+                id: 'opacity',
+                type: 'slider',
+                defaults: 1,
+                step: 0.01,
+                max: 1,
+                min: 0,
+              },
+              {
+                id: 'border-radius',
+                type: 'integer',
+                units: ['px', '%', 'em', 'rem'],
+                defaults: '0',
+              },
+              {
+                id: 'border',
+                property: 'border',
+                type: 'composite',
+                properties: [
+                  { id: 'border-width', type: 'integer', units: ['px', 'em', 'rem'] },
+                  {
+                    id: 'border-style',
+                    type: 'select',
+                    list: [
+                      { value: 'none', name: 'None' },
+                      { value: 'solid', name: 'Solid' },
+                      { value: 'dotted', name: 'Dotted' },
+                      { value: 'dashed', name: 'Dashed' },
+                      { value: 'double', name: 'Double' },
+                      { value: 'groove', name: 'Groove' },
+                      { value: 'ridge', name: 'Ridge' },
+                      { value: 'inset', name: 'Inset' },
+                      { value: 'outset', name: 'Outset' },
+                    ],
+                  },
+                  { id: 'border-color', type: 'color' },
+                ],
+              },
+            ],
           },
           {
             name: 'Extra',
             open: false,
             buildProps: ['transition', 'perspective', 'transform'],
+            properties: [
+              {
+                id: 'transition',
+                property: 'transition',
+                type: 'stack',
+                preview: false,
+                full: true,
+              },
+              {
+                id: 'transform',
+                property: 'transform',
+                type: 'stack',
+                preview: false,
+                full: true,
+              },
+            ],
           },
         ],
       },
@@ -119,6 +364,22 @@ const BuilderPage = () => {
     // Derive the Component type from the editor instance
     type GjsComponent = InstanceType<typeof editor.DomComponents.Component>;
     type GjsComponentView = InstanceType<typeof editor.DomComponents.ComponentView>;
+
+    // --- Container Component ---
+    // This is a basic component that can contain other components.
+    editor.DomComponents.addType('container', {
+      model: {
+        defaults: {
+          // Make it droppable
+          droppable: true,
+          style: {
+            'min-height': '50px',
+            border: '1px solid #ddd',
+            padding: '10px',
+          },
+        },
+      },
+    });
 
     // --- Shadcn UI Button Integration ---
 
