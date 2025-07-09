@@ -18,6 +18,11 @@ const BuilderPage = () => {
 
   useEffect(() => {
     setMounted(true);
+    // Add font-awesome to head
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+    document.head.appendChild(link);
   }, []);
 
   useEffect(() => {
@@ -60,6 +65,39 @@ const BuilderPage = () => {
             select: true,
             content: { type: "image" },
             activate: true,
+          },
+        ],
+      },
+      layerManager: {
+        appendTo: '#layers-container',
+      },
+      styleManager: {
+        appendTo: '#styles-container',
+        sectors: [
+          {
+            name: 'General',
+            open: false,
+            buildProps: ['float', 'display', 'position', 'top', 'right', 'left', 'bottom'],
+          },
+          {
+            name: 'Dimension',
+            open: false,
+            buildProps: ['width', 'height', 'max-width', 'min-height', 'margin', 'padding'],
+          },
+          {
+            name: 'Typography',
+            open: false,
+            buildProps: ['font-family', 'font-size', 'font-weight', 'letter-spacing', 'color', 'line-height', 'text-align', 'text-decoration', 'text-shadow'],
+          },
+          {
+            name: 'Decorations',
+            open: false,
+            buildProps: ['opacity', 'background-color', 'border-radius', 'border', 'box-shadow', 'background'],
+          },
+          {
+            name: 'Extra',
+            open: false,
+            buildProps: ['transition', 'perspective', 'transform'],
           },
         ],
       },
@@ -274,9 +312,38 @@ const BuilderPage = () => {
   if (!mounted) return null; // Prevent SSR mismatch
 
   return (
-    <div className="flex">
-      <div id="blocks" className="w-1/4 bg-gray-200 p-4"></div>
-      <div ref={editorContainerRef} className="w-3/4 bg-white"></div>
+    <div className="flex h-screen">
+      {/* Left Panel - Blocks */}
+      <div className="w-1/5 bg-gray-100 border-r">
+        <div className="p-4">
+          <h3 className="font-bold mb-2">Blocks</h3>
+          <div id="blocks"></div>
+        </div>
+      </div>
+      
+      {/* Main Editor */}
+      <div className="flex-1 flex flex-col">
+        <div ref={editorContainerRef} className="flex-1"></div>
+      </div>
+      
+      {/* Right Panel - Layers and Style Manager */}
+      <div className="w-1/4 bg-gray-100 border-l flex flex-col">
+        {/* Layers Panel */}
+        <div className="flex-1 border-b">
+          <div className="p-4">
+            <h3 className="font-bold mb-2">Layers</h3>
+            <div id="layers-container"></div>
+          </div>
+        </div>
+        
+        {/* Style Manager */}
+        <div className="flex-1">
+          <div className="p-4">
+            <h3 className="font-bold mb-2">Style Manager</h3>
+            <div id="styles-container"></div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

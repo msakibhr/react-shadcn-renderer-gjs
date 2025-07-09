@@ -18,6 +18,11 @@ const BuilderPage = () => {
 
   useEffect(() => {
     setMounted(true);
+    // Add font-awesome to head
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+    document.head.appendChild(link);
   }, []);
 
   useEffect(() => {
@@ -79,6 +84,265 @@ const BuilderPage = () => {
               type: 'container', // This will correspond to a new component type
             },
             category: 'Layout',
+          },
+        ],
+      },
+      layerManager: {
+        appendTo: '#layers-container',
+      },
+      styleManager: {
+        appendTo: '#styles-container',
+        sectors: [
+          {
+            name: 'General',
+            open: false,
+            buildProps: [
+              'float',
+              'display',
+              'position',
+              'top',
+              'right',
+              'left',
+              'bottom',
+            ],
+            properties: [
+              {
+                id: 'float',
+                type: 'radio',
+                defaults: 'none',
+                list: [
+                  { value: 'none', className: 'fa fa-times' },
+                  { value: 'left', className: 'fa fa-align-left' },
+                  { value: 'right', className: 'fa fa-align-right' },
+                ],
+              },
+              {
+                property: 'position',
+                type: 'select',
+                defaults: 'static',
+                list: [
+                  { value: 'static', name: 'Static' },
+                  { value: 'relative', name: 'Relative' },
+                  { value: 'absolute', name: 'Absolute' },
+                  { value: 'fixed', name: 'Fixed' },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Dimension',
+            open: false,
+            buildProps: [
+              'width',
+              'height',
+              'max-width',
+              'min-height',
+              'margin',
+              'padding',
+            ],
+            properties: [
+              {
+                id: 'width',
+                type: 'integer',
+                units: ['px', '%', 'em', 'rem', 'vw'],
+                defaults: 'auto',
+              },
+              {
+                id: 'height',
+                type: 'integer',
+                units: ['px', '%', 'em', 'rem', 'vh'],
+                defaults: 'auto',
+              },
+              {
+                id: 'max-width',
+                type: 'integer',
+                units: ['px', '%', 'em', 'rem', 'vw'],
+                defaults: 'none',
+              },
+              {
+                id: 'min-height',
+                type: 'integer',
+                units: ['px', '%', 'em', 'rem', 'vh'],
+                defaults: '0',
+              },
+              {
+                id: 'margin',
+                property: 'margin',
+                type: 'composite',
+                properties: [
+                  { id: 'margin-top', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'margin-right', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'margin-bottom', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'margin-left', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                ],
+              },
+              {
+                id: 'padding',
+                property: 'padding',
+                type: 'composite',
+                properties: [
+                  { id: 'padding-top', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'padding-right', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'padding-bottom', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                  { id: 'padding-left', type: 'integer', units: ['px', '%', 'em', 'rem'] },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Typography',
+            open: false,
+            buildProps: [
+              'font-family',
+              'font-size',
+              'font-weight',
+              'letter-spacing',
+              'color',
+              'line-height',
+              'text-align',
+              'text-decoration',
+              'text-shadow',
+            ],
+            properties: [
+              {
+                id: 'font-family',
+                type: 'select',
+                defaults: 'Arial, sans-serif',
+                list: [
+                  { value: 'Arial, sans-serif', name: 'Arial' },
+                  { value: 'Helvetica, sans-serif', name: 'Helvetica' },
+                  { value: 'Georgia, serif', name: 'Georgia' },
+                  { value: 'Times New Roman, serif', name: 'Times New Roman' },
+                  { value: 'Courier New, monospace', name: 'Courier New' },
+                ],
+              },
+              {
+                id: 'font-size',
+                type: 'integer',
+                units: ['px', 'em', 'rem', '%'],
+                defaults: '16px',
+              },
+              {
+                id: 'font-weight',
+                type: 'select',
+                defaults: 'normal',
+                list: [
+                  { value: 'normal', name: 'Normal' },
+                  { value: 'bold', name: 'Bold' },
+                  { value: 'bolder', name: 'Bolder' },
+                  { value: 'lighter', name: 'Lighter' },
+                  { value: '100', name: '100' },
+                  { value: '200', name: '200' },
+                  { value: '300', name: '300' },
+                  { value: '400', name: '400' },
+                  { value: '500', name: '500' },
+                  { value: '600', name: '600' },
+                  { value: '700', name: '700' },
+                  { value: '800', name: '800' },
+                  { value: '900', name: '900' },
+                ],
+              },
+              {
+                id: 'line-height',
+                type: 'integer',
+                units: ['px', 'em', 'rem', '%'],
+                defaults: 'normal',
+              },
+              {
+                id: 'text-align',
+                type: 'radio',
+                defaults: 'left',
+                list: [
+                  { value: 'left', name: 'Left', className: 'fa fa-align-left' },
+                  { value: 'center', name: 'Center', className: 'fa fa-align-center' },
+                  { value: 'right', name: 'Right', className: 'fa fa-align-right' },
+                  { value: 'justify', name: 'Justify', className: 'fa fa-align-justify' },
+                ],
+              },
+              {
+                id: 'text-decoration',
+                type: 'radio',
+                defaults: 'none',
+                list: [
+                  { value: 'none', name: 'None', className: 'fa fa-times' },
+                  { value: 'underline', name: 'Underline', className: 'fa fa-underline' },
+                  { value: 'line-through', name: 'Line-through', className: 'fa fa-strikethrough' },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Decorations',
+            open: false,
+            buildProps: [
+              'opacity',
+              'background-color',
+              'border-radius',
+              'border',
+              'box-shadow',
+              'background',
+            ],
+            properties: [
+              {
+                id: 'opacity',
+                type: 'slider',
+                defaults: 1,
+                step: 0.01,
+                max: 1,
+                min: 0,
+              },
+              {
+                id: 'border-radius',
+                type: 'integer',
+                units: ['px', '%', 'em', 'rem'],
+                defaults: '0',
+              },
+              {
+                id: 'border',
+                property: 'border',
+                type: 'composite',
+                properties: [
+                  { id: 'border-width', type: 'integer', units: ['px', 'em', 'rem'] },
+                  {
+                    id: 'border-style',
+                    type: 'select',
+                    list: [
+                      { value: 'none', name: 'None' },
+                      { value: 'solid', name: 'Solid' },
+                      { value: 'dotted', name: 'Dotted' },
+                      { value: 'dashed', name: 'Dashed' },
+                      { value: 'double', name: 'Double' },
+                      { value: 'groove', name: 'Groove' },
+                      { value: 'ridge', name: 'Ridge' },
+                      { value: 'inset', name: 'Inset' },
+                      { value: 'outset', name: 'Outset' },
+                    ],
+                  },
+                  { id: 'border-color', type: 'color' },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'Extra',
+            open: false,
+            buildProps: ['transition', 'perspective', 'transform'],
+            properties: [
+              {
+                id: 'transition',
+                property: 'transition',
+                type: 'stack',
+                preview: false,
+                full: true,
+              },
+              {
+                id: 'transform',
+                property: 'transform',
+                type: 'stack',
+                preview: false,
+                full: true,
+              },
+            ],
           },
         ],
       },
@@ -309,9 +573,38 @@ const BuilderPage = () => {
   if (!mounted) return null; // Prevent SSR mismatch
 
   return (
-    <div className="flex">
-      <div id="blocks" className="w-1/4 bg-gray-200 p-4"></div>
-      <div ref={editorContainerRef} className="w-3/4 bg-white"></div>
+    <div className="flex h-screen">
+      {/* Left Panel - Blocks */}
+      <div className="w-1/5 bg-gray-100 border-r">
+        <div className="p-4">
+          <h3 className="font-bold mb-2">Blocks</h3>
+          <div id="blocks"></div>
+        </div>
+      </div>
+      
+      {/* Main Editor */}
+      <div className="flex-1 flex flex-col">
+        <div ref={editorContainerRef} className="flex-1"></div>
+      </div>
+      
+      {/* Right Panel - Layers and Style Manager */}
+      <div className="w-1/4 bg-gray-100 border-l flex flex-col">
+        {/* Layers Panel */}
+        <div className="flex-1 border-b">
+          <div className="p-4">
+            <h3 className="font-bold mb-2">Layers</h3>
+            <div id="layers-container"></div>
+          </div>
+        </div>
+        
+        {/* Style Manager */}
+        <div className="flex-1">
+          <div className="p-4">
+            <h3 className="font-bold mb-2">Style Manager</h3>
+            <div id="styles-container"></div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
