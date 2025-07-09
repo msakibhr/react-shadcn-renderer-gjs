@@ -32,7 +32,6 @@ const BuilderPage = () => {
     for (const sheet of styleSheets) {
       if (sheet.href) {
         styleHrefs.push(sheet.href);
-        // comment for test commit
       }
     }
 
